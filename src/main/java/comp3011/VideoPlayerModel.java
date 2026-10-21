@@ -91,6 +91,7 @@ public class VideoPlayerModel {
 
     public VideoPlayerModel(
             boolean audioEnabled,
+            List<FrameEffect> effects,
             BiConsumer<Integer, Integer> videoSizeChangedHandler,
             Consumer<Image> frameReadyHandler,
             Consumer<String> statusChangedHandler,
@@ -103,6 +104,10 @@ public class VideoPlayerModel {
         this.playbackStateChangedHandler = playbackStateChangedHandler;
         this.audioOutputStateChangedHandler = audioOutputStateChangedHandler;
         this.frameProcessors = new ArrayList<>();
+        
+        for (int position = 0; position < effects.size(); position++) {
+            frameProcessors.add(effects.get(position).createProcessor(position));
+        }
 //        frameProcessors.add(new FrameBleeder());
 //        frameProcessors.add(new FrameScratcher());
 //        frameProcessors.add(new FrameDuster());
