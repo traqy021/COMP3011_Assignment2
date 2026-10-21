@@ -12,7 +12,7 @@ package comp3011;
 
 import java.io.File;
 import java.util.function.BiConsumer;
-
+import java.util.List;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -33,11 +33,13 @@ public class VideoPlayerController {
 
     public VideoPlayerController(
             boolean audioEnabled,
+            List<FrameEffect> effects,
             BiConsumer<Integer, Integer> videoSizeChangedHandler) {
         this.view = new VideoPlayerView();
         this.videoSizeChangedHandler = videoSizeChangedHandler;
         model = new VideoPlayerModel(
                 audioEnabled,
+                effects,
                 this::onVideoSizeChanged,
                 this::onFrameReady,
                 this::onStatusChanged,
