@@ -32,6 +32,8 @@ public class CommandLineController {
     private Integer displayId;
     private File videoFile;
     private String errorMessage;
+    // Declaring the effects list
+    private final List<FrameEffect> effects = new ArrayList<>();
 
     public CommandLineController(String[] args) {
         this.args = args.clone();
@@ -42,6 +44,10 @@ public class CommandLineController {
         if (helpRequested) {
             printHelp();
         }
+    }
+    
+    public List<FrameEffect> getEffects() {
+        return List.copyOf(effects);
     }
 
     public File getVideoFile() {
@@ -106,6 +112,39 @@ public class CommandLineController {
             }
         }
     }
+    
+    private void parseLongOption(String option) {
+        FrameEffect effect = FrameEffect.fromLongName(option);
+        if (effect != null) {
+            effects.add(effect);
+            return;
+        }
+        switch (option) {
+            case "help" -> helpRequested = true;
+            case "audio" -> audioRequested = true;
+            case "maximise" -> maximiseRequested = true;
+            case "monitor-1" -> setDisplayId(1);
+            case "monitor-2" -> setDisplayId(2);
+            default -> errorMessage = "Unknown option: --" + option;
+        }
+    }
+
+    private void parseShortOption(char option) {
+        FrameEffect effect = FrameEffect.fromShortName(option);
+        if (effect != null) {
+            effects.add(effect);
+            return;
+        }
+        switch (option) {
+            case 'h' -> helpRequested = true;
+            case 'a' -> audioRequested = true;
+            case 'x' -> maximiseRequested = true;
+            case '1' -> setDisplayId(1);
+            case '2' -> setDisplayId(2);
+            default -> errorMessage = "Unknown option: -" + option;
+        }
+    }
+
 
     private void setDisplayId(int displayId) {
         if (this.displayId != null && this.displayId != displayId) {
