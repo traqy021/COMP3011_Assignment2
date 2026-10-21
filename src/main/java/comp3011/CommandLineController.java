@@ -79,16 +79,30 @@ public class CommandLineController {
     }
 
     private void parse(String[] args) {
+    	
+    	// Checking whether help was requested
+    	if (containsHelpOption(args)) {
+            helpRequested = true;
+            return;
+        }
+    	
+    	// Parse all other arguments
         List<String> files = new ArrayList<>();
         boolean optionsEnded = false;
+        
         for (String arg : args) {
+        	
             if (optionsEnded) {
                 files.add(arg);
+                
             } else if (arg.equals("--")) {
                 optionsEnded = true;
+                
             } else if (arg.startsWith("--")) {
                 parseLongOption(arg.substring(2));
+                
             } else if (arg.startsWith("-") && arg.length() > 1) {
+            	
                 // '-jfddn' means five individual options, in precisely this order.
                 for (int i = 1; i < arg.length(); i++) {
                     parseShortOption(arg.charAt(i));
@@ -111,6 +125,31 @@ public class CommandLineController {
         } else if (!helpRequested) {
             errorMessage = "No video file specified.";
         }
+    }
+    
+    // Searches for help before normal argument parsing
+    private static boolean containsHelpOption(String[] args) {
+
+        for (String arg : args) {
+
+            if (arg.equals("--")) {
+                break;
+            }
+
+            if (arg.equals("--help")) {
+                return true;
+            }
+
+            if (arg.startsWith("-")
+                    && !arg.startsWith("--")
+                    && arg.length() > 1
+                    && arg.indexOf('h', 1) >= 1) {
+
+                return true;
+            }
+        }
+
+        return false;
     }
     
     private void parseLongOption(String option) {
