@@ -33,15 +33,17 @@ public class FrameScratcher extends FrameProcessor {
     private static final double THICK_SCRATCH_PROBABILITY = 0.15;
     private static final int SCRATCH_MAX_TRAVEL = 32;
 
-    private static int nextInstanceIndex;
-
     private final int instanceIndex;
     private final List<Scratch> scratches = new ArrayList<>();
     private int mediaSeed;
 
     public FrameScratcher() {
+        this(0);
+    }
+
+    public FrameScratcher(int effectPosition) {
         super();
-        instanceIndex = nextInstanceIndex++;
+        instanceIndex = effectPosition;
     }
 
     @Override

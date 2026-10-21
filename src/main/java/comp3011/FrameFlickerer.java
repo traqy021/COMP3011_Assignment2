@@ -28,14 +28,17 @@ import org.bytedeco.javacv.Frame;
 public class FrameFlickerer extends FrameProcessor {
     private static final double FLICKER_PERCENTAGE_SD = 5.0;
 
-    private static int nextInstanceIndex;
-
     private final int instanceIndex;
     private int mediaSeed;
 
+    
     public FrameFlickerer() {
+        this(0);
+    }
+
+    public FrameFlickerer(int effectPosition) {
         super();
-        instanceIndex = nextInstanceIndex++;
+        instanceIndex = effectPosition;
     }
 
     @Override

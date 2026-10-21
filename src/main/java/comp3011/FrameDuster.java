@@ -37,15 +37,19 @@ public class FrameDuster extends FrameProcessor {
     private static final double UNIFORM_ANGLE_PROBABILITY = 0.18;
     private static final int SEED_SALT = 0x44555354;
 
-    private static int nextInstanceIndex;
 
     private final int instanceIndex;
     private int mediaSeed;
-
+    
     public FrameDuster() {
-        super();
-        instanceIndex = nextInstanceIndex++;
+        this(0);
     }
+
+    public FrameDuster(int effectPosition) {
+        super();
+        instanceIndex = effectPosition;
+    }
+    
 
     @Override
     public void initialise(InfoVideo videoInfo) throws Exception {
