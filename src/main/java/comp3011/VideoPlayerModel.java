@@ -27,6 +27,8 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
 
+import java.util.EnumMap;
+
 /**
  * The model part of the video player model-view-controller architecture.
  *
@@ -105,8 +107,19 @@ public class VideoPlayerModel {
         this.audioOutputStateChangedHandler = audioOutputStateChangedHandler;
         this.frameProcessors = new ArrayList<>();
         
-        for (int position = 0; position < effects.size(); position++) {
-            frameProcessors.add(effects.get(position).createProcessor(position));
+        EnumMap<FrameEffect, Integer> effectInstanceCounts =
+                new EnumMap<>(FrameEffect.class);
+
+        for (FrameEffect effect : effects) {
+
+            int instanceIndex =
+                    effectInstanceCounts.getOrDefault(effect, 0);
+
+            frameProcessors.add(
+                    effect.createProcessor(instanceIndex)
+            );
+
+            effectInstanceCounts.put(effect, instanceIndex + 1);
         }
 //        frameProcessors.add(new FrameBleeder());
 //        frameProcessors.add(new FrameScratcher());
