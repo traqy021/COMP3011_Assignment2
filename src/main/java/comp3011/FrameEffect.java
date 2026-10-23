@@ -3,15 +3,15 @@ package comp3011;
 import java.util.function.IntFunction;
 
 public enum FrameEffect {
-	
-	NUMBER('n', "number-frames",
+
+    NUMBER('n', "number-frames",
             index -> new FrameNumberer()),
 
     SCRATCH('s', "scratch-frames",
-            index -> new FrameScratcher()),
+            index -> new FrameScratcher(index)),
 
     FLICKER('f', "flicker-frames",
-            index -> new FrameFlickerer()),
+            index -> new FrameFlickerer(index)),
 
     BLACK_WHITE('w', "black-and-white",
             index -> new FrameBlackAndWhiter()),
@@ -23,19 +23,19 @@ public enum FrameEffect {
             index -> new FrameVignetter()),
 
     DUST('d', "dust-frames",
-            index -> new FrameDuster()),
+            index -> new FrameDuster(index)),
 
     JITTER('j', "jitter-frames",
-            index -> new FrameJitterer()),
+            index -> new FrameJitterer(index)),
 
     MOTTLE('m', "mottle-frames",
-            index -> new FrameMottler()),
+            index -> new FrameMottler(index)),
 
     BLEED('b', "bleed-frames",
             index -> new FrameBleeder()),
 
     PEPPER('p', "pepper-frames",
-            index -> new FramePepperer());
+            index -> new FramePepperer(index));
 
     private final char shortName;
     private final String longName;
