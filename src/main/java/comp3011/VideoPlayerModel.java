@@ -75,8 +75,10 @@ public class VideoPlayerModel {
     private long firstTimestampUs = NO_SEEK_REQUEST;
     private long logicalPlaybackBaseUs;
     private long playbackStartNs;
+    private long pipelineStartedNs; // Records when the pipeline starts
     private long pauseStartedNs;
     private long relativeSeekBaseUs = NO_SEEK_REQUEST;
+    
 
     public VideoPlayerModel(
             boolean audioEnabled,
@@ -208,6 +210,7 @@ public class VideoPlayerModel {
         notifyStatusChanged(videoFile.getName());
         pipeline = new VideoFramePipeline(videoFile, startTimestampUs, effects);
         playbackOpen = true;
+        pipelineStartedNs = System.nanoTime();
         pipeline.start(); // starts background decoder; returns immediately
         playbackTimer.start();
         notifyPlaybackStateChanged();
@@ -290,6 +293,25 @@ public class VideoPlayerModel {
             System.out.printf("Frame headroom is %5dus out of %dus spare.%n",
                     remainingUs, videoFrameDurationUs);
         }
+        if (frame.frameNumber() % 24 == 0) {
+
+            double wallSeconds =
+                    (System.nanoTime() - pipelineStartedNs)
+                    / 1_000_000_000.0;
+
+            double mediaSeconds =
+                    (frame.timestampUs() - firstTimestampUs)
+                    / 1_000_000.0;
+
+            System.out.printf(
+                    "TIMING frame=%d wall=%.3fs media=%.3fs drift=%.3fs%n",
+                    frame.frameNumber(),
+                    wallSeconds,
+                    mediaSeconds,
+                    wallSeconds - mediaSeconds
+            );
+        }
+        
         notifyFrameReady(frame.image());
     }
 
