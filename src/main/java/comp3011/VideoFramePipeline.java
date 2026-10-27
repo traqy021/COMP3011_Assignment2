@@ -19,6 +19,7 @@ import org.bytedeco.javacv.FrameGrabber;
 import org.bytedeco.javacv.JavaFXFrameConverter;
 
 import javafx.scene.image.Image;
+import java.util.EnumMap;
 
 public final class VideoFramePipeline {
     public record VideoResult(
@@ -215,10 +216,25 @@ public final class VideoFramePipeline {
     }
 
     private WorkerState createWorkerState() {
-        List<FrameProcessor> chain = new ArrayList<>();
-        for (int position = 0; position < requestedEffects.size(); position++) {
-            chain.add(requestedEffects.get(position).createProcessor(position));
+
+        EnumMap<FrameEffect, Integer> counts =
+                new EnumMap<>(FrameEffect.class);
+
+        List<FrameProcessor> chain =
+                new ArrayList<>();
+
+        for (FrameEffect effect : requestedEffects) {
+
+            int instanceIndex =
+                    counts.getOrDefault(effect, 0);
+
+            chain.add(
+                    effect.createProcessor(instanceIndex)
+            );
+
+            counts.put(effect, instanceIndex + 1);
         }
+
         return new WorkerState(chain);
     }
 
